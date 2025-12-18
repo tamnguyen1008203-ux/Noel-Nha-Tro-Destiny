@@ -6,75 +6,38 @@
     <title>Merry Christmas - Nhà Trọ Destiny</title>
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@500&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-red: #b32626;
-            --vintage-cream: #f4eee1;
-            --gold: #c5a059;
-            --noel-red: #d42426;
+        :root { --primary-red: #b32626; --vintage-cream: #f4eee1; --gold: #c5a059; --noel-red: #d42426; }
+        
+        body { 
+            margin: 0; height: 100dvh; display: flex; justify-content: center; align-items: center; 
+            background: #0b1a2a url('https://images.unsplash.com/photo-1543589077-47d81606c1bf?q=80&w=2070') no-repeat center center/cover; 
+            overflow: hidden; font-family: 'Quicksand', sans-serif; -webkit-tap-highlight-color: transparent; 
         }
 
-        body {
-            margin: 0; height: 100dvh; display: flex; justify-content: center; align-items: center;
-            background: #0b1a2a url('https://images.unsplash.com/photo-1543589077-47d81606c1bf?q=80&w=2070') no-repeat center center/cover;
-            overflow: hidden; font-family: 'Quicksand', sans-serif; -webkit-tap-highlight-color: transparent;
+        /* TỐI ƯU: Ẩn toàn bộ thiệp lúc đầu để tránh bị lộ trước khi lớp cào hiện ra */
+        #main-content {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex; justify-content: center; align-items: center;
         }
 
-        /* --- LỚP GIẤY GÓI --- */
-        #scratch-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 999; cursor: crosshair; touch-action: none;
-            transition: opacity 0.8s ease;
-        }
+        #scratch-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999; touch-action: none; transition: opacity 0.8s ease; }
         #scratch-canvas { width: 100%; height: 100%; }
 
-        /* --- PHONG BÌ & THIỆP --- */
-        .envelope-container {
-            position: relative; width: 320px; height: 210px;
-            background-color: var(--vintage-cream); border-radius: 0 0 10px 10px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6); cursor: pointer; z-index: 10;
-        }
-        .envelope-text {
-            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
-            color: var(--primary-red); font-family: 'Dancing Script', cursive;
-            font-size: 2rem; width: 100%; text-align: center; z-index: 30;
-        }
-        .lid {
-            position: absolute; top: 0; left: 0; border-left: 160px solid transparent; 
-            border-right: 160px solid transparent; border-top: 120px solid var(--primary-red);
-            transform-origin: top; transition: transform 0.8s ease; z-index: 20;
-        }
-        .bow {
-            position: absolute; top: 90px; left: 50%; transform: translateX(-50%);
-            width: 60px; height: 60px; background: var(--noel-red); border-radius: 50%;
-            z-index: 40; display: flex; justify-content: center; align-items: center;
-            color: white; font-size: 10px; font-weight: bold;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 2px solid white;
-        }
-
-        .letter {
-            position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%) scale(0);
-            width: 85%; max-width: 350px; min-height: 380px;
-            background: var(--vintage-cream); padding: 20px;
-            box-sizing: border-box; border: 8px double var(--gold); 
-            border-radius: 5px; z-index: 100; opacity: 0;
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-align: center;
-        }
-
-        /* --- ẢNH NHẢY VÀO --- */
-        .side-img-container {
-            position: fixed; bottom: -500px; width: 120px; 
-            transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 150; text-align: center;
-        }
+        /* Các style cũ giữ nguyên */
+        .envelope-container { position: relative; width: 320px; height: 210px; background-color: var(--vintage-cream); border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); cursor: pointer; z-index: 10; }
+        .envelope-text { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); color: var(--primary-red); font-family: 'Dancing Script', cursive; font-size: 2rem; width: 100%; text-align: center; z-index: 30; }
+        .lid { position: absolute; top: 0; left: 0; border-left: 160px solid transparent; border-right: 160px solid transparent; border-top: 120px solid var(--primary-red); transform-origin: top; transition: transform 0.8s ease; z-index: 20; }
+        .bow { position: absolute; top: 90px; left: 50%; transform: translateX(-50%); width: 60px; height: 60px; background: var(--noel-red); border-radius: 50%; z-index: 40; display: flex; justify-content: center; align-items: center; color: white; font-size: 10px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 2px solid white; }
+        .letter { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%) scale(0); width: 85%; max-width: 350px; min-height: 380px; background: var(--vintage-cream); padding: 20px; box-sizing: border-box; border: 8px double var(--gold); border-radius: 5px; z-index: 100; opacity: 0; transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-align: center; }
+        .side-img-container { position: fixed; bottom: -500px; width: 120px; transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 150; text-align: center; }
         .side-img-container img { width: 100%; border-radius: 10px; border: 3px solid white; box-shadow: 0 8px 15px rgba(0,0,0,0.4); }
         .side-text { color: #ffffff; font-family: 'Dancing Script', cursive; font-size: 1rem; text-shadow: 2px 2px 4px #ff0000; font-weight: bold; margin-bottom: 5px; }
-
         .open-state .lid { transform: rotateX(180deg); }
         .open-state .envelope-container { transform: translateY(600px); opacity: 0; pointer-events: none; }
         .open-state .letter { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         .open-state #left-img { bottom: env(safe-area-inset-bottom); margin-bottom: 20px; left: 5%; transform: rotate(-5deg); }
         .open-state #right-img { bottom: env(safe-area-inset-bottom); margin-bottom: 20px; right: 5%; transform: rotate(5deg); }
-
         #fireworks { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 200; }
         .snow { position: fixed; top: -10px; background: white; border-radius: 50%; pointer-events: none; animation: fall linear infinite; z-index: 99; }
         @keyframes fall { to { transform: translateY(100vh); } }
@@ -82,33 +45,26 @@
 </head>
 <body>
 
-    <div id="scratch-container">
-        <canvas id="scratch-canvas"></canvas>
-    </div>
+    <div id="scratch-container"><canvas id="scratch-canvas"></canvas></div>
 
-    <canvas id="fireworks"></canvas>
-    
-    <audio id="scratchSound" loop preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg"></audio>
-    <audio id="bgMusic" loop preload="auto"><source src="music.mp3" type="audio/mpeg"></audio>
-    <audio id="clickSound" preload="auto"><source src="https://www.fesliyanstudios.com/play-mp3/387" type="audio/mpeg"></audio>
+    <div id="main-content">
+        <canvas id="fireworks"></canvas>
+        <audio id="scratchSound" loop preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg"></audio>
+        <audio id="bgMusic" loop preload="auto"><source src="music.mp3" type="audio/mpeg"></audio>
+        <audio id="clickSound" preload="auto"><source src="https://www.fesliyanstudios.com/play-mp3/387" type="audio/mpeg"></audio>
 
-    <div class="side-img-container" id="left-img">
-        <div class="side-text">Cung hỷ Christmas</div>
-        <img src="merry1.png" alt="Merry 1">
-    </div>
-    <div class="side-img-container" id="right-img">
-        <div class="side-text">, Merry phát tài</div>
-        <img src="merry2.png" alt="Merry 2">
-    </div>
+        <div class="side-img-container" id="left-img"><div class="side-text">Cung hỷ Christmas</div><img src="merry1.png"></div>
+        <div class="side-img-container" id="right-img"><div class="side-text">, Merry phát tài</div><img src="merry2.png"></div>
 
-    <div class="envelope-container" onclick="openLetter()">
-        <div class="lid"></div><div class="bow">OPEN</div><div class="envelope-text">Nhà Trọ Destiny</div>
-    </div>
+        <div class="envelope-container" onclick="openLetter()">
+            <div class="lid"></div><div class="bow">OPEN</div><div class="envelope-text">Nhà Trọ Destiny</div>
+        </div>
 
-    <div class="letter" id="letter">
-        <div style="font-family: 'Dancing Script'; color: var(--primary-red); font-size: 1.8rem; margin-bottom: 10px; border-bottom: 2px solid var(--gold);">Merry Christmas</div>
-        <div id="typewriter" style="font-size: 0.85rem; line-height: 1.4; color: #3e2723;"></div>
-        <p id="closing-text" style="font-family: 'Dancing Script'; font-size: 1.4rem; color: var(--primary-red); margin-top: 15px; opacity: 0; transition: 1s;">Hihi, love you all!!</p>
+        <div class="letter" id="letter">
+            <div style="font-family: 'Dancing Script'; color: var(--primary-red); font-size: 1.8rem; margin-bottom: 10px; border-bottom: 2px solid var(--gold);">Merry Christmas</div>
+            <div id="typewriter" style="font-size: 0.85rem; line-height: 1.4; color: #3e2723;"></div>
+            <p id="closing-text" style="font-family: 'Dancing Script'; font-size: 1.4rem; color: var(--primary-red); margin-top: 15px; opacity: 0; transition: 1s;">Hihi, love you all!!</p>
+        </div>
     </div>
 
     <script>
@@ -122,21 +78,19 @@
         function init() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            
-            // Màu nền đỏ Noel
             ctx.fillStyle = '#d42426';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Chữ hướng dẫn David (Làm rõ và đậm hơn)
-            ctx.font = 'bold 36px "Dancing Script"';
-            ctx.fillStyle = '#ffffff'; // Màu trắng tinh cho rõ nét
+            const fontSize = Math.min(window.innerWidth * 0.08, 42); 
+            ctx.font = `bold ${fontSize}px "Dancing Script"`;
+            ctx.fillStyle = '#ffffff'; 
             ctx.textAlign = 'center';
             ctx.shadowBlur = 15; 
             ctx.shadowColor = "rgba(0,0,0,0.8)";
             ctx.fillText('Cào để nhận quà từ David!', canvas.width/2, canvas.height/2);
             
-            // Reset shadow cho các nét vẽ cào
-            ctx.shadowBlur = 0;
+            // TỐI ƯU: Sau khi vẽ lớp cào xong mới cho hiện nội dung thiệp bên dưới
+            document.getElementById('main-content').style.opacity = '1';
         }
 
         function unlockAudio() {
@@ -149,19 +103,14 @@
         function scratch(e) {
             if (!isDrawing) return;
             if (sfx.paused) sfx.play().catch(e => {});
-
             const x = (e.pageX || (e.touches ? e.touches[0].pageX : 0));
             const y = (e.pageY || (e.touches ? e.touches[0].pageY : 0));
-            
             ctx.globalCompositeOperation = 'destination-out';
-            
-            // Hiệu ứng gỡ giấy nham nhở
+            const scratchSize = window.innerWidth * 0.1; 
             for(let j=0; j<6; j++) {
-                const offsetX = (Math.random() - 0.5) * 45;
-                const offsetY = (Math.random() - 0.5) * 45;
-                ctx.beginPath();
-                ctx.arc(x + offsetX, y + offsetY, 35, 0, Math.PI * 2);
-                ctx.fill();
+                const offsetX = (Math.random() - 0.5) * 50;
+                const offsetY = (Math.random() - 0.5) * 50;
+                ctx.beginPath(); ctx.arc(x + offsetX, y + offsetY, scratchSize/2, 0, Math.PI * 2); ctx.fill();
             }
             check();
         }
