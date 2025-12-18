@@ -1,0 +1,131 @@
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    /* Thay link ảnh nền Giáng sinh ở đây */
+    background: url('https://images.unsplash.com/photo-1543589077-47d81606c1bf?q=80&w=2070&auto=format&fit=crop') no-repeat center center fixed;
+    background-size: cover;
+    overflow: hidden;
+    font-family: 'Arial', sans-serif;
+}
+
+#heart-container {
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+.heart {
+    font-size: 100px;
+    animation: heartbeat 1.2s infinite;
+    user-select: none;
+}
+
+@keyframes heartbeat {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.hidden {
+    display: none !important;
+}
+
+.christmas-card {
+    background: rgba(255, 255, 255, 0.9); /* Làm thiệp hơi trong suốt để thấy nền web */
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    max-width: 450px;
+    animation: slideIn 1s ease-out;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(50px); }
+    to { opacity: 1; transform: translateY(0); }
+}.snow {
+    position: absolute;
+    top: -10px;
+    background: white;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: fall linear forwards;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(100vh);
+    }
+}/* Căn giữa toàn bộ khối nội dung */
+.container {
+    max-width: 600px; /* Độ rộng của khung trắng */
+    margin: 0 auto;   /* Căn giữa khung này ra giữa màn hình */
+    background: white;
+    border-radius: 15px;
+    overflow: hidden; /* Giúp bo góc hình ảnh theo khung */
+    text-align: center;
+}
+
+/* Sửa lỗi hiển thị hình ảnh */
+img {
+    width: 100%;      /* Hình ảnh luôn rộng bằng khung trắng */
+    height: auto;     /* Giữ đúng tỉ lệ, không bị méo hình */
+    display: block;   /* Loại bỏ khoảng trống thừa dưới ảnh */
+    object-fit: cover; /* Đảm bảo ảnh lấp đầy khung đẹp nhất */
+}.container {
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}/* Container chứa ảnh ở hai bên */
+.side-images {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    pointer-events: none;
+    z-index: 110; /* Nằm trên thiệp một chút */
+}
+
+.side-img-box {
+    position: absolute;
+    width: 250px;
+    opacity: 0;
+    transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-align: center;
+}
+
+/* Vị trí ban đầu ở giữa thiệp */
+#left-img { left: 50%; transform: translate(-50%, -50%) scale(0) rotate(0deg); }
+#right-img { left: 50%; transform: translate(-50%, -50%) scale(0) rotate(0deg); }
+
+/* Vị trí sau khi "nhảy" ra hai bên theo hướng mũi tên */
+.show-side-imgs #left-img {
+    left: 15%; /* Căn chỉnh xích ra lề trái */
+    transform: translate(-50%, -50%) scale(1) rotate(-10deg);
+    opacity: 1;
+}
+
+.show-side-imgs #right-img {
+    left: 85%; /* Căn chỉnh xích ra lề phải */
+    transform: translate(-50%, -50%) scale(1) rotate(10deg);
+    opacity: 1;
+}
+
+.side-img-box img {
+    width: 100%;
+    border-radius: 15px;
+    border: 5px solid white;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.side-img-box span {
+    display: block;
+    color: #ffffff;
+    font-family: 'Dancing Script', cursive;
+    font-size: 2rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px #ff0000, -2px -2px 4px #ff0000;
+    font-weight: bold;
+}

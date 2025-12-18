@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merry Christmas - Nhà Trọ Destiny</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-red: #b32626;
+            --vintage-cream: #f4eee1;
+            --gold: #c5a059;
+            --bokeh-color: rgba(255, 255, 255, 0.2);
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #0b1a2a url('https://images.unsplash.com/photo-1543589077-47d81606c1bf?q=80&w=2070') no-repeat center center/cover;
+            overflow: hidden;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        /* 1. HIỆU ỨNG BOKEH (Giống Video TikTok) */
+        .bokeh-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.4) 100%);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        #fireworks { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 200; }
+
+        /* 2. ẢNH NHẢY RA SONG SONG (Căn chỉnh lại cho đẹp) */
+        .side-img-box {
+            position: fixed;
+            bottom: -500px;
+            width: 280px;
+            transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+            z-index: 150;
+            text-align: center;
+        }
+        .side-img-box img {
+            width: 100%;
+            border-radius: 20px;
+            border: 6px solid white;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+        }
+        .side-text {
+            color: #ffffff;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+        }
+        #left-img { left: 8%; }
+        #right-img { right: 8%; }
+        .open-state #left-img { bottom: 80px; transform: rotate(-5deg); }
+        .open-state #right-img { bottom: 80px; transform: rotate(5deg); }
+
+        /* 3. PHONG BÌ & THIỆP */
+        .envelope-container {
+            position: relative;
+            width: 380px; height: 260px;
+            background-color: var(--vintage-cream);
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.8);
+            cursor: pointer; z-index: 10;
+        }
+        .envelope-text {
+            position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%);
+            color: var(--primary-red); font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem; width: 100%; text-align: center; z-index: 30;
+        }
+        .lid {
+            position: absolute; top: 0; left: 0;
+            border-left: 190px solid transparent; border-right: 190px solid transparent;
+            border-top: 145px solid var(--primary-red);
+            transform-origin: top; transition: transform 0.9s ease; z-index: 20;
+        }
+        .bow {
+            position: absolute; top: 115px; left: 50%; transform: translateX(-50%);
+            width: 75px; height: 75px; background: #d42426; border-radius: 50%;
+            z-index: 40; display: flex; justify-content: center; align-items: center;
+            color: white; font-size: 13px; font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4); border: 4px solid white;
+        }
+
+        .letter {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 380px; min-height: 520px;
+            background: var(--vintage-cream); padding: 40px;
+            box-sizing: border-box; border: 12px double var(--gold); 
+            border-radius: 5px; z-index: 100; opacity: 0;
+            transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-align: center;
+        }
+        .letter-title {
+            font-family: 'Dancing Script', cursive;
+            color: var(--primary-red); font-size: 2.5rem;
+            margin-bottom: 25px; border-bottom: 2px solid var(--gold);
+        }
+        .typed-content { font-size: 1.15rem; line-height: 1.9; color: #3e2723; }
+        
+        #closing-text {
+            font-family: 'Dancing Script'; font-size: 1.8rem;
+            color: var(--primary-red); margin-top: 30px;
+            opacity: 0; transform: translateY(20px); transition: all 1s ease;
+        }
+
+        .open-state .lid { transform: rotateX(180deg); z-index: 5; }
+        .open-state .envelope-container { transform: translateY(400px); opacity: 0; }
+        .open-state .letter { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+        .open-state #closing-text.show { opacity: 1; transform: translateY(0); }
+
+        .snow { position: fixed; top: -10px; background: white; border-radius: 50%; pointer-events: none; animation: fall linear infinite; z-index: 99; }
+        @keyframes fall { to { transform: translateY(100vh); } }
+    </style>
+</head>
+<body>
+
+    <div class="bokeh-overlay"></div>
+    <canvas id="fireworks"></canvas>
+
+    <audio id="bgMusic" loop><source src="music.mp3" type="audio/mpeg"></audio>
+    <audio id="typeSound"><source src="https://www.fesliyanstudios.com/play-mp3/6" type="audio/mpeg"></audio>
+    <audio id="clickSound"><source src="https://www.fesliyanstudios.com/play-mp3/387" type="audio/mpeg"></audio>
+
+    <div class="side-img-box" id="left-img">
+        <div class="side-text">Cung hỷ Christmas</div>
+        <img src="merry1.png" alt="Merry 1">
+    </div>
+    <div class="side-img-box" id="right-img">
+        <div class="side-text">, Merry phát tài</div>
+        <img src="merry2.png" alt="Merry 2">
+    </div>
+
+    <div class="envelope-container" onclick="openLetter()">
+        <div class="lid"></div>
+        <div class="bow">OPEN</div>
+        <div class="envelope-text">Nhà Trọ Destiny</div>
+    </div>
+
+    <div class="letter" id="letter">
+        <div class="letter-title">Merry Christmas</div>
+        <div id="typewriter" class="typed-content"></div>
+        <p id="closing-text">Hihi, love you all!!</p>
+    </div>
+
+    <script>
+        const message = "Lời đầu tiên, xin chúc cho nhà trọ Destiny chúng ta một mùa giáng sinh an lành. Chúc cho mọi người luôn luôn hạnh phúc, công việc sẽ ngày càng phát triển, thuận lợi hơn. Ai chưa có bồ thì sẽ có bồ ngay sau giáng sinh, ai có rồi thì sẽ yêu nhau thật lâu. Cuối cùng, chúc cho chúng ta sẽ có thể giữ được mối quan hệ thân thiết như bây giờ và về sau này (nếu được).";
+        let i = 0;
+
+        function openLetter() {
+            if (!document.body.classList.contains('open-state')) {
+                document.getElementById('clickSound').play();
+                document.body.classList.add('open-state');
+                document.getElementById('bgMusic').play().catch(() => {});
+                setTimeout(typeWriter, 1200);
+            }
+        }
+
+        function typeWriter() {
+            if (i < message.length) {
+                const char = message.charAt(i);
+                document.getElementById("typewriter").innerHTML += char;
+                if (char !== " ") {
+                    const sound = document.getElementById('typeSound');
+                    sound.currentTime = 0;
+                    sound.play().catch(() => {});
+                }
+                i++;
+                setTimeout(typeWriter, 60);
+            } else {
+                setTimeout(() => {
+                    document.getElementById("closing-text").classList.add('show');
+                    startFireworks();
+                }, 800);
+            }
+        }
+
+        // Logic pháo hoa & Tuyết (Giữ nguyên và tối ưu mượt hơn)
+        const canvas = document.getElementById('fireworks');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function startFireworks() {
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            animateFireworks();
+            setInterval(() => { createFirework(Math.random() * canvas.width, Math.random() * canvas.height * 0.4); }, 700);
+        }
+        function createFirework(x, y) {
+            const colors = ['#ff0000', '#ffd700', '#ffffff', '#ff69b4', '#00ff00'];
+            for (let i = 0; i < 60; i++) {
+                particles.push({ x, y, dx: (Math.random()-0.5)*10, dy: (Math.random()-0.5)*10, size: Math.random()*3, color: colors[Math.floor(Math.random()*colors.length)], life: 100 });
+            }
+        }
+        function animateFireworks() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, idx) => {
+                p.x += p.dx; p.y += p.dy; p.dy += 0.08; p.life -= 1.5;
+                ctx.fillStyle = p.color; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+                if (p.life <= 0) particles.splice(idx, 1);
+            });
+            requestAnimationFrame(animateFireworks);
+        }
+        setInterval(() => {
+            const snow = document.createElement('div'); snow.classList.add('snow');
+            snow.style.left = Math.random() * 100 + 'vw';
+            const s = Math.random()*6+3+'px'; snow.style.width = s; snow.style.height = s;
+            snow.style.animationDuration = Math.random()*4+3+'s';
+            document.body.appendChild(snow); setTimeout(() => snow.remove(), 6000);
+        }, 150);
+    </script>
+</body>
+</html>
