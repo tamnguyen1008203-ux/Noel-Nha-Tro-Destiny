@@ -7,38 +7,77 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@500&display=swap" rel="stylesheet">
     <style>
         :root { --primary-red: #b32626; --vintage-cream: #f4eee1; --gold: #c5a059; --noel-red: #d42426; }
+        body { margin: 0; height: 100dvh; display: flex; justify-content: center; align-items: center; background: #0b1a2a url('https://images.unsplash.com/photo-1543589077-47d81606c1bf?q=80&w=2070') no-repeat center center/cover; overflow: hidden; font-family: 'Quicksand', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        body { 
-            margin: 0; height: 100dvh; display: flex; justify-content: center; align-items: center; 
-            background: #0b1a2a url('https://images.unsplash.com/photo-1543589077-47d81606c1bf?q=80&w=2070') no-repeat center center/cover; 
-            overflow: hidden; font-family: 'Quicksand', sans-serif; -webkit-tap-highlight-color: transparent; 
-        }
-
-        /* TỐI ƯU: Ẩn toàn bộ thiệp lúc đầu để tránh bị lộ trước khi lớp cào hiện ra */
-        #main-content {
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            display: flex; justify-content: center; align-items: center;
-        }
-
-        #scratch-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999; touch-action: none; transition: opacity 0.8s ease; }
+        #main-content { opacity: 0; transition: opacity 0.5s; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
+        #scratch-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999; touch-action: none; transition: opacity 0.8s; }
         #scratch-canvas { width: 100%; height: 100%; }
 
-        /* Các style cũ giữ nguyên */
-        .envelope-container { position: relative; width: 320px; height: 210px; background-color: var(--vintage-cream); border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); cursor: pointer; z-index: 10; }
-        .envelope-text { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); color: var(--primary-red); font-family: 'Dancing Script', cursive; font-size: 2rem; width: 100%; text-align: center; z-index: 30; }
-        .lid { position: absolute; top: 0; left: 0; border-left: 160px solid transparent; border-right: 160px solid transparent; border-top: 120px solid var(--primary-red); transform-origin: top; transition: transform 0.8s ease; z-index: 20; }
-        .bow { position: absolute; top: 90px; left: 50%; transform: translateX(-50%); width: 60px; height: 60px; background: var(--noel-red); border-radius: 50%; z-index: 40; display: flex; justify-content: center; align-items: center; color: white; font-size: 10px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 2px solid white; }
-        .letter { position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%) scale(0); width: 85%; max-width: 350px; min-height: 380px; background: var(--vintage-cream); padding: 20px; box-sizing: border-box; border: 8px double var(--gold); border-radius: 5px; z-index: 100; opacity: 0; transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); text-align: center; }
-        .side-img-container { position: fixed; bottom: -500px; width: 120px; transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 150; text-align: center; }
-        .side-img-container img { width: 100%; border-radius: 10px; border: 3px solid white; box-shadow: 0 8px 15px rgba(0,0,0,0.4); }
-        .side-text { color: #ffffff; font-family: 'Dancing Script', cursive; font-size: 1rem; text-shadow: 2px 2px 4px #ff0000; font-weight: bold; margin-bottom: 5px; }
+        /* PHONG BÌ */
+        .envelope-wrapper { position: relative; width: 320px; height: 210px; z-index: 10; transition: 0.8s; }
+        .envelope-container { position: absolute; width: 100%; height: 100%; background: var(--vintage-cream); border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
+        .lid { position: absolute; top: 0; left: 0; border-left: 160px solid transparent; border-right: 160px solid transparent; border-top: 120px solid var(--primary-red); transform-origin: top; transition: transform 0.8s; z-index: 20; }
+        .bow { position: absolute; top: 90px; left: 50%; transform: translateX(-50%); width: 60px; height: 60px; background: var(--noel-red); border-radius: 50%; z-index: 40; display: flex; justify-content: center; align-items: center; color: white; font-size: 10px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.3); border: 2px solid white; cursor: pointer; }
+        
         .open-state .lid { transform: rotateX(180deg); }
-        .open-state .envelope-container { transform: translateY(600px); opacity: 0; pointer-events: none; }
+        .open-state .envelope-wrapper { transform: translateY(100vh); opacity: 0; pointer-events: none; }
+
+        /* LÁ THƯ */
+        .letter { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); width: 90%; max-width: 380px; background: var(--vintage-cream); padding: 25px; border: 8px double var(--gold); border-radius: 5px; z-index: 100; opacity: 0; transition: all 0.4s ease; text-align: center; box-sizing: border-box; }
         .open-state .letter { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        .open-state #left-img { bottom: env(safe-area-inset-bottom); margin-bottom: 20px; left: 5%; transform: rotate(-5deg); }
-        .open-state #right-img { bottom: env(safe-area-inset-bottom); margin-bottom: 20px; right: 5%; transform: rotate(5deg); }
-        #fireworks { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 200; }
+
+        /* KHUNG CHỨA PHIM KỶ NIỆM */
+        #movie-frame {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            display: flex; flex-direction: column; align-items: center; gap: 2.5vh;
+            width: 100%; opacity: 0; pointer-events: none; z-index: 200;
+        }
+
+        .movie-text { color: #ffffff; font-family: 'Dancing Script', cursive; font-size: 2.2rem; text-shadow: 2px 2px 8px #ff0000; font-weight: bold; opacity: 0; white-space: nowrap; }
+
+        #memory-rail { 
+            display: flex; 
+            gap: 1.5vw; /* Nới rộng khoảng cách giữa các tấm hình */
+            justify-content: center; 
+            align-items: center; 
+            width: 100%;
+            padding: 0 5px;
+        }
+
+        .memory-img { 
+            width: 13.5vw; /* Thu nhỏ để không bị đè nhau trên mobile */
+            max-width: 110px; 
+            border: 2px solid white; 
+            border-radius: 4px; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
+            opacity: 0;
+            transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        /* VỊ TRÍ XUẤT PHÁT CỦA HÌNH */
+        #merry1 { transform: translate(-100vw, -100vh); }
+        #merry2 { transform: translate(100vw, -100vh); }
+        #merry3, #merry4 { transform: translateX(-120vw); }
+        #merry5, #merry6 { transform: translateX(120vw); }
+
+        /* KÍCH HOẠT PHIM */
+        .show-memories #movie-frame { opacity: 1; pointer-events: auto; }
+        .show-memories .memory-img, .show-memories .movie-text { opacity: 1; transform: translate(0, 0); }
+
+        /* HIỆU ỨNG THƯỚC PHIM CHẠY */
+        @keyframes movieLoop {
+            0%, 100% { transform: scale(1); z-index: 10; filter: brightness(1); }
+            50% { transform: scale(1.6); z-index: 300; filter: brightness(1.2); box-shadow: 0 15px 30px rgba(0,0,0,0.8); }
+        }
+        .slideshow-active .memory-img { animation: movieLoop 4s infinite ease-in-out; }
+        .memory-img:nth-child(1) { animation-delay: 0s; }
+        .memory-img:nth-child(2) { animation-delay: 0.6s; }
+        .memory-img:nth-child(3) { animation-delay: 1.2s; }
+        .memory-img:nth-child(4) { animation-delay: 1.8s; }
+        .memory-img:nth-child(5) { animation-delay: 2.4s; }
+        .memory-img:nth-child(6) { animation-delay: 3s; }
+
+        #fireworks { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
         .snow { position: fixed; top: -10px; background: white; border-radius: 50%; pointer-events: none; animation: fall linear infinite; z-index: 99; }
         @keyframes fall { to { transform: translateY(100vh); } }
     </style>
@@ -48,23 +87,38 @@
     <div id="scratch-container"><canvas id="scratch-canvas"></canvas></div>
 
     <div id="main-content">
-        <canvas id="fireworks"></canvas>
-        <audio id="scratchSound" loop preload="auto"><source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" type="audio/mpeg"></audio>
-        <audio id="bgMusic" loop preload="auto"><source src="music.mp3" type="audio/mpeg"></audio>
-        <audio id="clickSound" preload="auto"><source src="https://www.fesliyanstudios.com/play-mp3/387" type="audio/mpeg"></audio>
+        <audio id="scratchSound" loop><source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+        <audio id="bgMusic"><source src="music.mp3"></audio>
+        <audio id="bgMusic1"><source src="music1.mp3"></audio>
+        <audio id="clickSound"><source src="https://www.fesliyanstudios.com/play-mp3/387"></audio>
 
-        <div class="side-img-container" id="left-img"><div class="side-text">Cung hỷ Christmas</div><img src="merry1.png"></div>
-        <div class="side-img-container" id="right-img"><div class="side-text">, Merry phát tài</div><img src="merry2.png"></div>
+        <div id="movie-frame">
+            <div class="movie-text">Cung hỷ Christmas</div>
+            <div id="memory-rail">
+                <img src="merry1.png" id="merry1" class="memory-img">
+                <img src="merry3.png" id="merry3" class="memory-img">
+                <img src="merry4.png" id="merry4" class="memory-img">
+                <img src="merry6.png" id="merry6" class="memory-img">
+                <img src="merry5.png" id="merry5" class="memory-img">
+                <img src="merry2.png" id="merry2" class="memory-img">
+            </div>
+            <div class="movie-text">Merry phát tài</div>
+        </div>
 
-        <div class="envelope-container" onclick="openLetter()">
-            <div class="lid"></div><div class="bow">OPEN</div><div class="envelope-text">Nhà Trọ Destiny</div>
+        <div class="envelope-wrapper" id="envelope">
+            <div class="lid"></div>
+            <div class="envelope-container">
+                <div class="bow" onclick="openLetter()">OPEN</div>
+                <div style="position:absolute;bottom:20px;width:100%;text-align:center;color:var(--primary-red);font-family:'Dancing Script';font-size:1.8rem;">Nhà Trọ Destiny</div>
+            </div>
         </div>
 
         <div class="letter" id="letter">
-            <div style="font-family: 'Dancing Script'; color: var(--primary-red); font-size: 1.8rem; margin-bottom: 10px; border-bottom: 2px solid var(--gold);">Merry Christmas</div>
-            <div id="typewriter" style="font-size: 0.85rem; line-height: 1.4; color: #3e2723;"></div>
-            <p id="closing-text" style="font-family: 'Dancing Script'; font-size: 1.4rem; color: var(--primary-red); margin-top: 15px; opacity: 0; transition: 1s;">Hihi, love you all!!</p>
+            <div style="font-family:'Dancing Script';color:var(--primary-red);font-size:1.8rem;border-bottom:2px solid var(--gold);margin-bottom:10px;">Merry Christmas</div>
+            <div id="typewriter" style="font-size:0.9rem;line-height:1.5;color:#3e2723;"></div>
+            <p id="closing-text" style="font-family:'Dancing Script';font-size:1.4rem;color:var(--primary-red);margin-top:10px;opacity:0;">Hihi, love you all!!</p>
         </div>
+        <canvas id="fireworks"></canvas>
     </div>
 
     <script>
@@ -72,76 +126,53 @@
         const ctx = canvas.getContext('2d');
         const sfx = document.getElementById('scratchSound');
         const bgMusic = document.getElementById('bgMusic');
+        const bgMusic1 = document.getElementById('bgMusic1');
         let isDrawing = false;
-        let audioUnlocked = false;
 
         function init() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            ctx.fillStyle = '#d42426';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            const fontSize = Math.min(window.innerWidth * 0.08, 42); 
-            ctx.font = `bold ${fontSize}px "Dancing Script"`;
-            ctx.fillStyle = '#ffffff'; 
-            ctx.textAlign = 'center';
-            ctx.shadowBlur = 15; 
-            ctx.shadowColor = "rgba(0,0,0,0.8)";
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            ctx.fillStyle = '#d42426'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            const fontSize = Math.min(window.innerWidth * 0.07, 30);
+            ctx.font = `bold ${fontSize}px "Dancing Script"`; ctx.fillStyle = 'white'; ctx.textAlign = 'center';
             ctx.fillText('Cào để nhận quà từ David!', canvas.width/2, canvas.height/2);
-            
-            // TỐI ƯU: Sau khi vẽ lớp cào xong mới cho hiện nội dung thiệp bên dưới
             document.getElementById('main-content').style.opacity = '1';
-        }
-
-        function unlockAudio() {
-            if (audioUnlocked) return;
-            sfx.play().then(() => { sfx.pause(); sfx.currentTime = 0; }).catch(e => {});
-            bgMusic.play().then(() => { bgMusic.pause(); bgMusic.currentTime = 0; }).catch(e => {});
-            audioUnlocked = true;
         }
 
         function scratch(e) {
             if (!isDrawing) return;
-            if (sfx.paused) sfx.play().catch(e => {});
+            sfx.play().catch(()=>{});
             const x = (e.pageX || (e.touches ? e.touches[0].pageX : 0));
             const y = (e.pageY || (e.touches ? e.touches[0].pageY : 0));
             ctx.globalCompositeOperation = 'destination-out';
-            const scratchSize = window.innerWidth * 0.1; 
-            for(let j=0; j<6; j++) {
-                const offsetX = (Math.random() - 0.5) * 50;
-                const offsetY = (Math.random() - 0.5) * 50;
-                ctx.beginPath(); ctx.arc(x + offsetX, y + offsetY, scratchSize/2, 0, Math.PI * 2); ctx.fill();
-            }
+            ctx.beginPath(); ctx.arc(x, y, 45, 0, Math.PI*2); ctx.fill();
             check();
         }
 
         function check() {
-            const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+            const data = ctx.getImageData(0,0,canvas.width,canvas.height).data;
             let count = 0;
-            for (let i = 3; i < data.length; i += 4) if (data[i] === 0) count++;
-            if (count > (data.length / 4) * 0.45) {
+            for(let i=3; i<data.length; i+=4) if(data[i]===0) count++;
+            if(count > data.length/4 * 0.45) {
                 document.getElementById('scratch-container').style.opacity = '0';
-                sfx.pause();
-                setTimeout(() => document.getElementById('scratch-container').remove(), 800);
+                setTimeout(()=>document.getElementById('scratch-container').remove(), 800);
             }
         }
 
-        canvas.addEventListener('mousedown', (e) => { isDrawing = true; unlockAudio(); scratch(e); });
-        window.addEventListener('mouseup', () => { isDrawing = false; sfx.pause(); });
+        canvas.addEventListener('mousedown', ()=>isDrawing=true);
+        window.addEventListener('mouseup', ()=>{isDrawing=false; sfx.pause();});
         canvas.addEventListener('mousemove', scratch);
-        canvas.addEventListener('touchstart', (e) => { isDrawing = true; unlockAudio(); e.preventDefault(); }, {passive: false});
-        canvas.addEventListener('touchend', () => { isDrawing = false; sfx.pause(); });
-        canvas.addEventListener('touchmove', (e) => { scratch(e); e.preventDefault(); }, {passive: false});
-        
+        canvas.addEventListener('touchstart', (e)=>{isDrawing=true; e.preventDefault();}, {passive:false});
+        canvas.addEventListener('touchend', ()=>{isDrawing=false; sfx.pause();});
+        canvas.addEventListener('touchmove', (e)=>{scratch(e); e.preventDefault();}, {passive:false});
         window.onload = init;
 
         function openLetter() {
-            if (!document.body.classList.contains('open-state')) {
-                document.getElementById('clickSound').play().catch(() => {});
-                document.body.classList.add('open-state');
-                bgMusic.play().catch(() => {});
-                setTimeout(type, 1200);
-            }
+            document.body.classList.add('open-state');
+            document.getElementById('clickSound').play();
+            bgMusic.play();
+            bgMusic.onended = () => bgMusic1.play();
+            bgMusic1.onended = () => bgMusic.play();
+            setTimeout(type, 1200);
         }
 
         const msg = "Lời đầu tiên, xin chúc cho nhà trọ Destiny chúng ta một mùa giáng sinh an lành. Chúc cho mọi người luôn luôn hạnh phúc, công việc sẽ ngày càng phát triển, thuận lợi hơn. Ai chưa có bồ thì sẽ có bồ ngay sau giáng sinh, ai có rồi thì sẽ yêu nhau thật lâu. Cuối cùng, chúc cho chúng ta sẽ có thể giữ được mối quan hệ thân thiết như bây giờ và về sau này (nếu được).";
@@ -151,8 +182,22 @@
                 document.getElementById("typewriter").innerHTML += msg.charAt(idx);
                 idx++; setTimeout(type, 45);
             } else {
-                setTimeout(() => { document.getElementById("closing-text").style.opacity = "1"; startF(); }, 500);
+                document.getElementById("closing-text").style.opacity = "1";
+                setTimeout(startMovie, 300); 
             }
+        }
+
+        function startMovie() {
+            const letter = document.getElementById('letter');
+            letter.style.opacity = '0';
+            letter.style.transform = 'translate(-50%, -50%) scale(0)';
+            
+            document.body.classList.add('show-memories');
+
+            setTimeout(() => {
+                document.getElementById('movie-frame').classList.add('slideshow-active');
+                startF();
+            }, 1200);
         }
 
         const cF = document.getElementById('fireworks'); const xF = cF.getContext('2d'); let pS = [];
