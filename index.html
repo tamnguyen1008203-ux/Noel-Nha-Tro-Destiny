@@ -13,7 +13,6 @@
         #scratch-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999; touch-action: none; transition: opacity 0.8s; }
         #scratch-canvas { width: 100%; height: 100%; }
 
-        /* PHONG BÌ */
         .envelope-wrapper { position: relative; width: 320px; height: 210px; z-index: 10; transition: 0.8s; }
         .envelope-container { position: absolute; width: 100%; height: 100%; background: var(--vintage-cream); border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
         .lid { position: absolute; top: 0; left: 0; border-left: 160px solid transparent; border-right: 160px solid transparent; border-top: 120px solid var(--primary-red); transform-origin: top; transition: transform 0.8s; z-index: 20; }
@@ -22,31 +21,31 @@
         .open-state .lid { transform: rotateX(180deg); }
         .open-state .envelope-wrapper { transform: translateY(100vh); opacity: 0; pointer-events: none; }
 
-        /* LÁ THƯ */
         .letter { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); width: 90%; max-width: 380px; background: var(--vintage-cream); padding: 25px; border: 8px double var(--gold); border-radius: 5px; z-index: 100; opacity: 0; transition: all 0.4s ease; text-align: center; box-sizing: border-box; }
         .open-state .letter { transform: translate(-50%, -50%) scale(1); opacity: 1; }
 
-        /* KHUNG CHỨA PHIM KỶ NIỆM */
+        /* KHUNG PHIM KỶ NIỆM - FIX CHỒNG ẢNH */
         #movie-frame {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            display: flex; flex-direction: column; align-items: center; gap: 2.5vh;
+            display: flex; flex-direction: column; align-items: center; gap: 15px;
             width: 100%; opacity: 0; pointer-events: none; z-index: 200;
         }
 
-        .movie-text { color: #ffffff; font-family: 'Dancing Script', cursive; font-size: 2.2rem; text-shadow: 2px 2px 8px #ff0000; font-weight: bold; opacity: 0; white-space: nowrap; }
+        .movie-text { color: #ffffff; font-family: 'Dancing Script', cursive; font-size: 2.2rem; text-shadow: 2px 2px 8px #ff0000; font-weight: bold; opacity: 0; text-align: center; width: 100%; }
 
         #memory-rail { 
             display: flex; 
-            gap: 1.5vw; /* Nới rộng khoảng cách giữa các tấm hình */
+            flex-wrap: wrap; /* Cho phép xuống dòng nếu màn hình nhỏ */
+            gap: 10px; 
             justify-content: center; 
             align-items: center; 
-            width: 100%;
-            padding: 0 5px;
+            width: 95%;
+            max-width: 800px;
         }
 
         .memory-img { 
-            width: 13.5vw; /* Thu nhỏ để không bị đè nhau trên mobile */
-            max-width: 110px; 
+            width: 28vw; /* Trên điện thoại sẽ hiện 3 ảnh 1 hàng */
+            max-width: 120px; 
             border: 2px solid white; 
             border-radius: 4px; 
             box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
@@ -54,20 +53,19 @@
             transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        /* VỊ TRÍ XUẤT PHÁT CỦA HÌNH */
+        /* VỊ TRÍ XUẤT PHÁT */
         #merry1 { transform: translate(-100vw, -100vh); }
         #merry2 { transform: translate(100vw, -100vh); }
         #merry3, #merry4 { transform: translateX(-120vw); }
         #merry5, #merry6 { transform: translateX(120vw); }
 
-        /* KÍCH HOẠT PHIM */
         .show-memories #movie-frame { opacity: 1; pointer-events: auto; }
         .show-memories .memory-img, .show-memories .movie-text { opacity: 1; transform: translate(0, 0); }
 
         /* HIỆU ỨNG THƯỚC PHIM CHẠY */
         @keyframes movieLoop {
             0%, 100% { transform: scale(1); z-index: 10; filter: brightness(1); }
-            50% { transform: scale(1.6); z-index: 300; filter: brightness(1.2); box-shadow: 0 15px 30px rgba(0,0,0,0.8); }
+            50% { transform: scale(1.3); z-index: 300; filter: brightness(1.2); box-shadow: 0 15px 30px rgba(0,0,0,0.8); }
         }
         .slideshow-active .memory-img { animation: movieLoop 4s infinite ease-in-out; }
         .memory-img:nth-child(1) { animation-delay: 0s; }
@@ -80,6 +78,12 @@
         #fireworks { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
         .snow { position: fixed; top: -10px; background: white; border-radius: 50%; pointer-events: none; animation: fall linear infinite; z-index: 99; }
         @keyframes fall { to { transform: translateY(100vh); } }
+
+        /* ĐIỀU CHỈNH RIÊNG CHO MÁY TÍNH */
+        @media (min-width: 768px) {
+            .memory-img { width: 120px; }
+            #memory-rail { flex-wrap: nowrap; }
+        }
     </style>
 </head>
 <body>
@@ -132,8 +136,7 @@
         function init() {
             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
             ctx.fillStyle = '#d42426'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            const fontSize = Math.min(window.innerWidth * 0.07, 30);
-            ctx.font = `bold ${fontSize}px "Dancing Script"`; ctx.fillStyle = 'white'; ctx.textAlign = 'center';
+            ctx.font = `bold 26px "Dancing Script"`; ctx.fillStyle = 'white'; ctx.textAlign = 'center';
             ctx.fillText('Cào để nhận quà từ David!', canvas.width/2, canvas.height/2);
             document.getElementById('main-content').style.opacity = '1';
         }
