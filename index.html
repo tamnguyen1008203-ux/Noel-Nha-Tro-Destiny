@@ -24,11 +24,10 @@
         .letter { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); width: 90%; max-width: 380px; background: var(--vintage-cream); padding: 25px; border: 8px double var(--gold); border-radius: 5px; z-index: 100; opacity: 0; transition: all 0.4s ease; text-align: center; box-sizing: border-box; }
         .open-state .letter { transform: translate(-50%, -50%) scale(1); opacity: 1; }
 
-        /* KHUNG PHIM KỶ NIỆM - TỐI ƯU GRID 2 HÀNG */
         #movie-frame {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             display: flex; flex-direction: column; align-items: center; gap: 20px;
-            width: 100%; opacity: 0; pointer-events: none; z-index: 200;
+            width: 100%; opacity: 0; pointer-events: none; z-index: 200; transition: opacity 1s;
         }
 
         .movie-text { color: #ffffff; font-family: 'Dancing Script', cursive; font-size: 2.2rem; text-shadow: 2px 2px 8px #ff0000; font-weight: bold; text-align: center; width: 100%; opacity: 0; transition: 1s; }
@@ -59,7 +58,6 @@
         .show-memories #movie-frame { opacity: 1; pointer-events: auto; }
         .show-memories .memory-img, .show-memories .movie-text { opacity: 1; transform: translate(0, 0); }
 
-        /* HIỆU ỨNG THƯỚC PHIM CHẠY */
         @keyframes movieLoop {
             0%, 100% { transform: scale(1); z-index: 10; }
             50% { transform: scale(1.3); z-index: 300; box-shadow: 0 15px 30px rgba(0,0,0,0.8); }
@@ -71,6 +69,28 @@
         .memory-img:nth-child(4) { animation-delay: 1.8s; }
         .memory-img:nth-child(5) { animation-delay: 2.4s; }
         .memory-img:nth-child(6) { animation-delay: 3s; }
+
+        /* KHUNG VIDEO */
+        #video-container {
+            position: fixed; inset: 0; background: black; z-index: 500;
+            display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 1s;
+        }
+        #video-player { width: 100%; max-height: 100%; outline: none; }
+
+        /* SANTA */
+        #santa-ride {
+            position: fixed; top: 15%; left: -300px; font-size: 50px; z-index: 400;
+            white-space: nowrap; pointer-events: none; opacity: 0;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));
+        }
+        @keyframes santaFly {
+            0% { left: -300px; transform: translateY(0) rotate(5deg); }
+            25% { transform: translateY(-30px) rotate(-5deg); }
+            50% { transform: translateY(0) rotate(5deg); }
+            75% { transform: translateY(-30px) rotate(-5deg); }
+            100% { left: 110vw; transform: translateY(0) rotate(5deg); }
+        }
+        .fly-santa #santa-ride { opacity: 1; animation: santaFly 12s linear infinite; }
 
         #fireworks { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
         .snow { position: fixed; top: -10px; background: white; border-radius: 50%; pointer-events: none; animation: fall linear infinite; z-index: 99; }
@@ -100,6 +120,12 @@
             <div class="movie-text">Merry phát tài</div>
         </div>
 
+        <div id="video-container">
+            <video id="video-player" playsinline webkit-playsinline></video>
+        </div>
+
+        <div id="santa-ride">🎅🛷🦌🦌</div>
+
         <div class="envelope-wrapper">
             <div class="lid"></div>
             <div class="envelope-container">
@@ -122,7 +148,12 @@
         const sfx = document.getElementById('scratchSound');
         const bgMusic = document.getElementById('bgMusic');
         const bgMusic1 = document.getElementById('bgMusic1');
+        const videoContainer = document.getElementById('video-container');
+        const videoPlayer = document.getElementById('video-player');
         let isDrawing = false;
+
+        const playlist = ["video1.mp4", "video2.mp4", "video3.mp4"];
+        let currentVideoIdx = 0;
 
         function init() {
             canvas.width = window.innerWidth;
@@ -172,6 +203,8 @@
         function openLetter() {
             document.body.classList.add('open-state');
             document.getElementById('clickSound').play();
+            bgMusic.volume = 1.0;
+            bgMusic1.volume = 1.0;
             bgMusic.play();
             bgMusic.onended = () => bgMusic1.play();
             bgMusic1.onended = () => bgMusic.play();
@@ -195,10 +228,43 @@
             document.getElementById('letter').style.opacity = '0';
             document.getElementById('letter').style.transform = 'translate(-50%, -50%) scale(0)';
             document.body.classList.add('show-memories');
+            
             setTimeout(() => {
                 document.querySelectorAll('.memory-img').forEach(img => img.classList.add('slideshow-active'));
+                document.body.classList.add('fly-santa'); 
                 startF();
+
+                // --- CHỈNH LẠI THỜI GIAN ĐỢI LÀ 7 GIÂY (7000ms) ---
+                setTimeout(startPlaylist, 7000);
             }, 1200);
+        }
+
+        function startPlaylist() {
+            bgMusic.volume = 0.2;
+            bgMusic1.volume = 0.2;
+            videoContainer.style.display = 'flex';
+            setTimeout(() => {
+                videoContainer.style.opacity = '1';
+                playNextVideo();
+            }, 100);
+        }
+
+        function playNextVideo() {
+            if (currentVideoIdx < playlist.length) {
+                videoPlayer.src = playlist[currentVideoIdx];
+                videoPlayer.play().catch(e => console.log("Video play error:", e));
+                videoPlayer.onended = () => {
+                    currentVideoIdx++;
+                    playNextVideo();
+                };
+            } else {
+                videoContainer.style.opacity = '0';
+                setTimeout(() => {
+                    videoContainer.style.display = 'none';
+                    bgMusic.volume = 1.0;
+                    bgMusic1.volume = 1.0;
+                }, 1000);
+            }
         }
 
         const cF = document.getElementById('fireworks'); const xF = cF.getContext('2d'); let pS = [];
