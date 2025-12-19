@@ -11,7 +11,7 @@
         
         #main-content { opacity: 0; transition: opacity 0.5s; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; }
         #scratch-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999; touch-action: none; transition: opacity 0.8s; }
-        #scratch-canvas { width: 100%; height: 100%; }
+        #scratch-canvas { width: 100%; height: 100%; cursor: crosshair; }
 
         .envelope-wrapper { position: relative; width: 320px; height: 210px; z-index: 10; transition: 0.8s; }
         .envelope-container { position: absolute; width: 100%; height: 100%; background: var(--vintage-cream); border-radius: 0 0 10px 10px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
@@ -24,49 +24,15 @@
         .letter { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); width: 90%; max-width: 380px; background: var(--vintage-cream); padding: 25px; border: 8px double var(--gold); border-radius: 5px; z-index: 100; opacity: 0; transition: all 0.4s ease; text-align: center; box-sizing: border-box; }
         .open-state .letter { transform: translate(-50%, -50%) scale(1); opacity: 1; }
 
-        /* KHUNG PHIM KỶ NIỆM - TỐI ƯU CHO IPHONE */
-        #movie-frame {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            display: flex; flex-direction: column; align-items: center; gap: 15px;
-            width: 100%; opacity: 0; pointer-events: none; z-index: 200;
-        }
-
-        .movie-text { color: #ffffff; font-family: 'Dancing Script', cursive; font-size: 2.2rem; text-shadow: 2px 2px 8px #ff0000; font-weight: bold; opacity: 0; text-align: center; width: 100%; transition: 1s; }
-
-        #memory-rail { 
-            display: flex; 
-            flex-wrap: wrap; /* Tự động xuống dòng để không chèn nhau */
-            gap: 12px; 
-            justify-content: center; 
-            align-items: center; 
-            width: 95%;
-            max-width: 450px; /* Bóp độ rộng để ép xuống 2 hàng trên mobile */
-        }
-
-        .memory-img { 
-            width: 28vw; 
-            max-width: 120px; 
-            border: 2px solid white; 
-            border-radius: 4px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
-            opacity: 0;
-            transition: all 1.2s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-
-        /* VỊ TRÍ XUẤT PHÁT */
-        #merry1 { transform: translate(-100vw, -100vh); }
-        #merry2 { transform: translate(100vw, -100vh); }
-        #merry3, #merry4 { transform: translateX(-120vw); }
-        #merry5, #merry6 { transform: translateX(120vw); }
+        #movie-frame { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; opacity: 0; pointer-events: none; z-index: 200; }
+        .movie-text { color: #ffffff; font-family: 'Dancing Script', cursive; font-size: 2.2rem; text-shadow: 2px 2px 8px #ff0000; font-weight: bold; text-align: center; }
+        #memory-rail { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; justify-items: center; width: 95%; max-width: 450px; }
+        .memory-img { width: 28vw; max-width: 120px; aspect-ratio: 1/1; object-fit: cover; border: 2px solid white; border-radius: 4px; opacity: 0; transition: all 1s; }
 
         .show-memories #movie-frame { opacity: 1; pointer-events: auto; }
-        .show-memories .memory-img, .show-memories .movie-text { opacity: 1; transform: translate(0, 0); }
+        .show-memories .memory-img { opacity: 1; transform: scale(1); }
 
-        /* HIỆU ỨNG THƯỚC PHIM CHẠY */
-        @keyframes movieLoop {
-            0%, 100% { transform: scale(1); z-index: 10; filter: brightness(1); }
-            50% { transform: scale(1.3); z-index: 300; filter: brightness(1.2); box-shadow: 0 15px 30px rgba(0,0,0,0.8); }
-        }
+        @keyframes movieLoop { 0%, 100% { transform: scale(1); z-index: 10; } 50% { transform: scale(1.3); z-index: 300; box-shadow: 0 15px 30px rgba(0,0,0,0.8); } }
         .slideshow-active .memory-img { animation: movieLoop 4s infinite ease-in-out; }
         .memory-img:nth-child(1) { animation-delay: 0s; }
         .memory-img:nth-child(2) { animation-delay: 0.6s; }
@@ -81,9 +47,7 @@
     </style>
 </head>
 <body>
-
     <div id="scratch-container"><canvas id="scratch-canvas"></canvas></div>
-
     <div id="main-content">
         <audio id="scratchSound" loop><source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
         <audio id="bgMusic"><source src="music.mp3"></audio>
@@ -93,17 +57,17 @@
         <div id="movie-frame">
             <div class="movie-text">Cung hỷ Christmas</div>
             <div id="memory-rail">
-                <img src="merry1.png" id="merry1" class="memory-img">
-                <img src="merry3.png" id="merry3" class="memory-img">
-                <img src="merry4.png" id="merry4" class="memory-img">
-                <img src="merry6.png" id="merry6" class="memory-img">
-                <img src="merry5.png" id="merry5" class="memory-img">
-                <img src="merry2.png" id="merry2" class="memory-img">
+                <img src="merry1.png" class="memory-img">
+                <img src="merry3.png" class="memory-img">
+                <img src="merry4.png" class="memory-img">
+                <img src="merry6.png" class="memory-img">
+                <img src="merry5.png" class="memory-img">
+                <img src="merry2.png" class="memory-img">
             </div>
             <div class="movie-text">Merry phát tài</div>
         </div>
 
-        <div class="envelope-wrapper" id="envelope">
+        <div class="envelope-wrapper">
             <div class="lid"></div>
             <div class="envelope-container">
                 <div class="bow" onclick="openLetter()">OPEN</div>
@@ -130,7 +94,7 @@
         function init() {
             canvas.width = window.innerWidth; canvas.height = window.innerHeight;
             ctx.fillStyle = '#d42426'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.font = `bold 26px "Dancing Script"`; ctx.fillStyle = 'white'; ctx.textAlign = 'center';
+            ctx.font = 'bold 26px "Dancing Script"'; ctx.fillStyle = 'white'; ctx.textAlign = 'center';
             ctx.fillText('Cào để nhận quà từ David!', canvas.width/2, canvas.height/2);
             document.getElementById('main-content').style.opacity = '1';
         }
@@ -138,18 +102,18 @@
         function scratch(e) {
             if (!isDrawing) return;
             sfx.play().catch(()=>{});
-            const x = (e.pageX || (e.touches ? e.touches[0].pageX : 0));
-            const y = (e.pageY || (e.touches ? e.touches[0].pageY : 0));
+            const x = (e.clientX || (e.touches ? e.touches[0].clientX : 0));
+            const y = (e.clientY || (e.touches ? e.touches[0].clientY : 0));
             ctx.globalCompositeOperation = 'destination-out';
-            ctx.beginPath(); ctx.arc(x, y, 45, 0, Math.PI*2); ctx.fill();
+            ctx.beginPath(); ctx.arc(x, y, 40, 0, Math.PI*2); ctx.fill();
             check();
         }
 
         function check() {
             const data = ctx.getImageData(0,0,canvas.width,canvas.height).data;
             let count = 0;
-            for(let i=3; i<data.length; i+=4) if(data[i]===0) count++;
-            if(count > data.length/4 * 0.45) {
+            for(let i=3; i<data.length; i+=4) if(data[i] === 0) count++;
+            if(count > (data.length/4) * 0.5) {
                 document.getElementById('scratch-container').style.opacity = '0';
                 setTimeout(()=>document.getElementById('scratch-container').remove(), 800);
             }
@@ -172,7 +136,7 @@
             setTimeout(type, 1200);
         }
 
-        const msg = "Lời đầu tiên, xin chúc cho nhà trọ Destiny chúng ta một mùa giáng sinh an lành. Chúc cho mọi người luôn luôn hạnh phúc, công việc sẽ ngày càng phát triển, thuận lợi hơn. Ai chưa có bồ thì sẽ có bồ ngay sau giáng sinh, ai có rồi thì sẽ yêu nhau thật lâu. Cuối cùng, chúc cho chúng ta sẽ có thể giữ được mối quan hệ thân thiết như bây giờ và về sau này (nếu được).";
+        const msg = "Lời đầu tiên, xin chúc cho nhà trọ Destiny chúng ta một mùa giáng sinh an lành. Chúc cho mọi người luôn luôn hạnh phúc, công việc sẽ ngày càng phát triển, thuận lợi hơn...";
         let idx = 0;
         function type() {
             if (idx < msg.length) {
@@ -180,21 +144,17 @@
                 idx++; setTimeout(type, 45);
             } else {
                 document.getElementById("closing-text").style.opacity = "1";
-                setTimeout(startMovie, 300); 
+                setTimeout(startMovie, 500); 
             }
         }
 
         function startMovie() {
-            const letter = document.getElementById('letter');
-            letter.style.opacity = '0';
-            letter.style.transform = 'translate(-50%, -50%) scale(0)';
-            
+            document.getElementById('letter').style.opacity = '0';
             document.body.classList.add('show-memories');
-
             setTimeout(() => {
-                document.getElementById('movie-frame').classList.add('slideshow-active');
+                document.querySelectorAll('.memory-img').forEach(img => img.classList.add('slideshow-active'));
                 startF();
-            }, 1200);
+            }, 1000);
         }
 
         const cF = document.getElementById('fireworks'); const xF = cF.getContext('2d'); let pS = [];
