@@ -24,27 +24,27 @@
         .letter { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); width: 90%; max-width: 380px; background: var(--vintage-cream); padding: 25px; border: 8px double var(--gold); border-radius: 5px; z-index: 100; opacity: 0; transition: all 0.4s ease; text-align: center; box-sizing: border-box; }
         .open-state .letter { transform: translate(-50%, -50%) scale(1); opacity: 1; }
 
-        /* KHUNG PHIM KỶ NIỆM - FIX CHỒNG ẢNH */
+        /* KHUNG PHIM KỶ NIỆM - TỐI ƯU CHO IPHONE */
         #movie-frame {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             display: flex; flex-direction: column; align-items: center; gap: 15px;
             width: 100%; opacity: 0; pointer-events: none; z-index: 200;
         }
 
-        .movie-text { color: #ffffff; font-family: 'Dancing Script', cursive; font-size: 2.2rem; text-shadow: 2px 2px 8px #ff0000; font-weight: bold; opacity: 0; text-align: center; width: 100%; }
+        .movie-text { color: #ffffff; font-family: 'Dancing Script', cursive; font-size: 2.2rem; text-shadow: 2px 2px 8px #ff0000; font-weight: bold; opacity: 0; text-align: center; width: 100%; transition: 1s; }
 
         #memory-rail { 
             display: flex; 
-            flex-wrap: wrap; /* Cho phép xuống dòng nếu màn hình nhỏ */
-            gap: 10px; 
+            flex-wrap: wrap; /* Tự động xuống dòng để không chèn nhau */
+            gap: 12px; 
             justify-content: center; 
             align-items: center; 
             width: 95%;
-            max-width: 800px;
+            max-width: 450px; /* Bóp độ rộng để ép xuống 2 hàng trên mobile */
         }
 
         .memory-img { 
-            width: 28vw; /* Trên điện thoại sẽ hiện 3 ảnh 1 hàng */
+            width: 28vw; 
             max-width: 120px; 
             border: 2px solid white; 
             border-radius: 4px; 
@@ -78,12 +78,6 @@
         #fireworks { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
         .snow { position: fixed; top: -10px; background: white; border-radius: 50%; pointer-events: none; animation: fall linear infinite; z-index: 99; }
         @keyframes fall { to { transform: translateY(100vh); } }
-
-        /* ĐIỀU CHỈNH RIÊNG CHO MÁY TÍNH */
-        @media (min-width: 768px) {
-            .memory-img { width: 120px; }
-            #memory-rail { flex-wrap: nowrap; }
-        }
     </style>
 </head>
 <body>
