@@ -152,7 +152,8 @@
         const videoPlayer = document.getElementById('video-player');
         let isDrawing = false;
 
-        const playlist = ["video1.mp4", "video2.mp4", "video3.mp4"];
+        // DANH SÁCH 2 VIDEO
+        const playlist = ["video1.mp4", "video2.mp4"];
         let currentVideoIdx = 0;
 
         function init() {
@@ -234,7 +235,7 @@
                 document.body.classList.add('fly-santa'); 
                 startF();
 
-                // --- CHỈNH LẠI THỜI GIAN ĐỢI LÀ 7 GIÂY (7000ms) ---
+                // CHỜ 7 GIÂY RỒI PHÁT 2 VIDEO
                 setTimeout(startPlaylist, 7000);
             }, 1200);
         }
