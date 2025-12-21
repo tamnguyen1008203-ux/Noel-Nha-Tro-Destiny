@@ -70,14 +70,12 @@
         .memory-img:nth-child(5) { animation-delay: 2.4s; }
         .memory-img:nth-child(6) { animation-delay: 3s; }
 
-        /* KHUNG VIDEO */
         #video-container {
             position: fixed; inset: 0; background: black; z-index: 500;
             display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 1s;
         }
         #video-player { width: 100%; max-height: 100%; outline: none; }
 
-        /* SANTA */
         #santa-ride {
             position: fixed; top: 15%; left: -300px; font-size: 50px; z-index: 400;
             white-space: nowrap; pointer-events: none; opacity: 0;
@@ -103,8 +101,7 @@
 
     <div id="main-content">
         <audio id="scratchSound" loop><source src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
-        <audio id="bgMusic"><source src="music.mp3"></audio>
-        <audio id="bgMusic1"><source src="music1.mp3"></audio>
+        <audio id="bgMusic" loop><source src="music1.mp3"></audio>
         <audio id="clickSound"><source src="https://www.fesliyanstudios.com/play-mp3/387"></audio>
 
         <div id="movie-frame">
@@ -147,12 +144,10 @@
         const ctx = canvas.getContext('2d');
         const sfx = document.getElementById('scratchSound');
         const bgMusic = document.getElementById('bgMusic');
-        const bgMusic1 = document.getElementById('bgMusic1');
         const videoContainer = document.getElementById('video-container');
         const videoPlayer = document.getElementById('video-player');
         let isDrawing = false;
 
-        // DANH SÁCH 2 VIDEO
         const playlist = ["video1.mp4", "video2.mp4"];
         let currentVideoIdx = 0;
 
@@ -204,11 +199,9 @@
         function openLetter() {
             document.body.classList.add('open-state');
             document.getElementById('clickSound').play();
+            // Bật nhạc music1.mp3 khi mở thư
             bgMusic.volume = 1.0;
-            bgMusic1.volume = 1.0;
-            bgMusic.play();
-            bgMusic.onended = () => bgMusic1.play();
-            bgMusic1.onended = () => bgMusic.play();
+            bgMusic.play().catch(e => console.log("Audio Error:", e));
             setTimeout(type, 1200);
         }
 
@@ -234,15 +227,12 @@
                 document.querySelectorAll('.memory-img').forEach(img => img.classList.add('slideshow-active'));
                 document.body.classList.add('fly-santa'); 
                 startF();
-
-                // CHỜ 7 GIÂY RỒI PHÁT 2 VIDEO
                 setTimeout(startPlaylist, 7000);
             }, 1200);
         }
 
         function startPlaylist() {
-            bgMusic.volume = 0.2;
-            bgMusic1.volume = 0.2;
+            bgMusic.volume = 0.2; // Giảm nhạc nền khi có video
             videoContainer.style.display = 'flex';
             setTimeout(() => {
                 videoContainer.style.opacity = '1';
@@ -253,7 +243,7 @@
         function playNextVideo() {
             if (currentVideoIdx < playlist.length) {
                 videoPlayer.src = playlist[currentVideoIdx];
-                videoPlayer.play().catch(e => console.log("Video play error:", e));
+                videoPlayer.play().catch(e => console.log("Video error:", e));
                 videoPlayer.onended = () => {
                     currentVideoIdx++;
                     playNextVideo();
@@ -262,12 +252,12 @@
                 videoContainer.style.opacity = '0';
                 setTimeout(() => {
                     videoContainer.style.display = 'none';
-                    bgMusic.volume = 1.0;
-                    bgMusic1.volume = 1.0;
+                    bgMusic.volume = 1.0; // Tăng lại nhạc nền sau khi hết video
                 }, 1000);
             }
         }
 
+        // Hiệu ứng Pháo hoa & Tuyết
         const cF = document.getElementById('fireworks'); const xF = cF.getContext('2d'); let pS = [];
         function startF() { cF.width = window.innerWidth; cF.height = window.innerHeight; anim(); setInterval(() => { createP(Math.random() * cF.width, Math.random() * cF.height * 0.5); }, 800); }
         function createP(x, y) { const cls = ['#ff0000', '#ffd700', '#ffffff']; for (let i = 0; i < 40; i++) pS.push({ x, y, dx: (Math.random()-0.5)*7, dy: (Math.random()-0.5)*7, size: Math.random()*2, color: cls[Math.floor(Math.random()*3)], life: 100 }); }
